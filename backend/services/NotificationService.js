@@ -1,24 +1,34 @@
 // services/NotificationService.js
-const axios = require('axios');
-const FCM_SERVER_KEY = process.env.FCM_SERVER_KEY;
-const FCM_URL = 'https://fcm.googleapis.com/fcm/send';
+const admin = require('firebase-admin');
+const path = require('path');
 
+// Load service account JSON (you can also use env vars)
+const serviceAccount = require(path.join(__dirname, '../firebase-service-account.json'));
+
+// Initialize Firebase Admin (only once)
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
+
+// Send generic push notification
 async function sendNotification(token, title, body, data = {}) {
-  if (!token) return { success: false, error: 'Missing FCM token' };
   try {
-    const res = await axios.post(FCM_URL, {
-      to: token,
-      notification: { title, body, sound: 'default' },
+    const message = {
+      token,
+      notification: {
+        title,
+        body
+      },
       data
-    }, {
-      headers: {
-        Authorization: `key=${FCM_SERVER_KEY}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    return { success: true, messageId: res.data.message_id };
+    };
+
+    const response = await admin.messaging().send(message);
+    console.log('✅ Notification sent:', response);
+    return { success: true, messageId: response };
   } catch (err) {
-    console.error('Push failed', err.response?.data || err.message);
+    console.error('❌ Notification error:', err);
     return { success: false, error: err.message };
   }
 }
@@ -26,7 +36,7 @@ async function sendNotification(token, title, body, data = {}) {
 module.exports = {
   sendNotification,
   sendNewMessageNotification: (token, sender, msg, platform) =>
-    sendNotification(token, `New ${platform} from ${sender}`, msg, { platform }),
+    sendNotification(token, `New ${platform} message from ${sender}`, msg, { platform }),
   sendAIResponseNotification: (token, reply) =>
     sendNotification(token, 'AI Assistant Reply', reply),
   sendMoodNotification: (token, mood, confidence) =>
