@@ -6,32 +6,27 @@ import retrofit2.http.*
 
 interface ApiService {
     
-    @POST("sms/incoming")
+    @GET("messages/{deviceId}")
+    suspend fun getMessages(@Path("deviceId") deviceId: String): List<Message>
+    
+    @POST("messages/sms/incoming")
+    @FormUrlEncoded
     suspend fun sendIncomingSms(
         @Field("sender") sender: String,
         @Field("message") message: String,
         @Field("timestamp") timestamp: Long,
         @Field("deviceId") deviceId: String
-    )
+    ): Any
     
-    @GET("sms/outgoing")
-    suspend fun getOutgoingSms(
-        @Query("deviceId") deviceId: String
-    ): List<OutgoingSms>
+    @GET("messages/sms/outgoing/{deviceId}")
+    suspend fun getOutgoingSms(@Path("deviceId") deviceId: String): List<OutgoingSms>
     
-    @POST("sms/sent/{id}")
-    suspend fun markSmsAsSent(@Path("id") id: String)
+    @POST("messages/sms/sent/{id}")
+    suspend fun markSmsAsSent(@Path("id") id: String): Any
     
-    @GET("messages")
-    suspend fun getMessages(
-        @Query("deviceId") deviceId: String
-    ): List<Message>
+    @POST("messages")
+    suspend fun sendMessage(@Body message: Message): Any
     
-    @POST("messages/reply")
-    suspend fun sendReply(
-        @Field("platform") platform: String,
-        @Field("recipient_id") recipientId: String,
-        @Field("message") message: String,
-        @Field("deviceId") deviceId: String
-    )
+    @GET("device/{deviceId}/status")
+    suspend fun getDeviceStatus(@Path("deviceId") deviceId: String): Any
 }

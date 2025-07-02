@@ -56,6 +56,12 @@
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
+        <!-- Enhanced Platform Integration Service -->
+        <service
+            android:name=".services.EnhancedPlatformIntegrationService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
     </application>
 
 </manifest>
