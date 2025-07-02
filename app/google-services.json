@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "163864030927",
+    "project_id": "messaging-hub-c5dd1",
+    "storage_bucket": "messaging-hub-c5dd1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163864030927:android:f4eab33df0a7368d9cd1ba",
+        "android_client_info": {
+          "package_name": "com.adik.BensonVergara"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWwiYL28FzX5s3a-XjF90-S-2KOup8XbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
