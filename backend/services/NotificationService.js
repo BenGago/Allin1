@@ -1,26 +1,19 @@
 // services/NotificationService.js
 const admin = require('firebase-admin');
-const path = require('path');
 
-// Load service account JSON (you can also use env vars)
-const serviceAccount = require(path.join(__dirname, '../firebase-service-account.json'));
+const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIAL_JSON);
 
-// Initialize Firebase Admin (only once)
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
   });
 }
 
-// Send generic push notification
 async function sendNotification(token, title, body, data = {}) {
   try {
     const message = {
       token,
-      notification: {
-        title,
-        body
-      },
+      notification: { title, body },
       data
     };
 
