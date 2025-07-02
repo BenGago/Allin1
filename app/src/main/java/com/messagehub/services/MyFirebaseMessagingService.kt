@@ -30,6 +30,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun sendTokenToBackend(token: String) {
         val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+Log.d("FCM", "Device ID: $deviceId")
+
+android.os.Handler(mainLooper).post {
+    android.widget.Toast.makeText(applicationContext, "Device ID: $deviceId", android.widget.Toast.LENGTH_LONG).show()
+}
 
         val json = JSONObject().apply {
             put("deviceId", deviceId)
