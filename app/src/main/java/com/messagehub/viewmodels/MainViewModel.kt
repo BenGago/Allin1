@@ -1,5 +1,6 @@
 package com.messagehub.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.messagehub.data.Message
@@ -57,14 +58,45 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val deviceId = messageRepository.getDeviceId()
-                apiService.sendReply(
-                    platform = message.platform,
-                    recipientId = message.recipientId ?: message.sender,
-                    message = reply,
-                    deviceId = deviceId
-                )
+            
+                // Send via platform-specific integration
+                val success = when (message.platform.lowercase()) {
+                    "telegram" -> {
+                        //val telegramIntegration = // Inject this
+                        //telegramIntegration.sendMessage(message.recipientId ?: message.sender, reply)
+                        Log.d("MainViewModel", "Telegram integration not implemented")
+                        false
+                    }
+                    "messenger" -> {
+                        //val messengerIntegration = // Inject this
+                        //messengerIntegration.sendMessage(message.recipientId ?: message.sender, reply)
+                        Log.d("MainViewModel", "Messenger integration not implemented")
+                        false
+                    }
+                    "twitter" -> {
+                        //val twitterIntegration = // Inject this
+                        //twitterIntegration.sendDirectMessage(message.recipientId ?: message.sender, reply)
+                        Log.d("MainViewModel", "Twitter integration not implemented")
+                        false
+                    }
+                    else -> {
+                        // Fallback to API service for other platforms
+                        apiService.sendReply(
+                            platform = message.platform,
+                            recipientId = message.recipientId ?: message.sender,
+                            message = reply,
+                            deviceId = deviceId
+                        )
+                        true
+                    }
+                }
+            
+                if (success) {
+                    // Handle successful send
+                    Log.d("MainViewModel", "Reply sent successfully via ${message.platform}")
+                }
             } catch (e: Exception) {
-                // Handle error
+                Log.e("MainViewModel", "Failed to send reply", e)
             }
         }
     }

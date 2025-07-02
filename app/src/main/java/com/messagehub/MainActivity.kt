@@ -86,6 +86,10 @@ class MainActivity : ComponentActivity() {
         val serviceIntent = Intent(this, MessageSyncService::class.java)
         startForegroundService(serviceIntent)
         
+        // Start platform integrations service
+        val platformServiceIntent = Intent(this, PlatformIntegrationService::class.java)
+        startForegroundService(platformServiceIntent)
+        
         // Schedule periodic work
         val workRequest = PeriodicWorkRequestBuilder<MessageSyncWorker>(15, TimeUnit.MINUTES)
             .setConstraints(
