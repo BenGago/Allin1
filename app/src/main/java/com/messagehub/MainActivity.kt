@@ -1,4 +1,4 @@
-package com.messagehub
+package com.adik.BensonVergara
 
 import android.Manifest
 import android.content.pm.PackageManager
