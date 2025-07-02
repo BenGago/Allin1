@@ -2,6 +2,7 @@ package com.messagehub.data
 
 import kotlinx.serialization.Serializable
 
+// Remove the userId field from Message since each installation is single-user
 @Serializable
 data class Message(
     val id: String,
@@ -15,7 +16,8 @@ data class Message(
     val isRead: Boolean = false,
     val isDelivered: Boolean = false,
     val replyToId: String? = null,
-    val reactions: List<Reaction> = emptyList()
+    val reactions: List<Reaction> = emptyList(),
+    val metadata: MutableMap<String, String>? = null
 )
 
 @Serializable
@@ -25,6 +27,7 @@ data class Reaction(
     val timestamp: Long
 )
 
+// Remove the userId field from Chat since each installation is single-user
 @Serializable
 data class Chat(
     val id: String,
@@ -36,15 +39,29 @@ data class Chat(
     val createdAt: Long = System.currentTimeMillis()
 )
 
+// Update User to represent the single account owner
 @Serializable
 data class User(
     val id: String,
     val username: String,
     val displayName: String,
+    val email: String,
+    val profilePicture: String? = null,
+    val encryptionKey: String? = null,
+    val platformCredentials: Map<String, PlatformCredential> = emptyMap(),
+    val createdAt: Long = System.currentTimeMillis(),
+    val isRegistered: Boolean = false
+)
+
+@Serializable
+data class PlatformCredential(
     val platform: String,
-    val isOnline: Boolean = false,
-    val lastSeen: Long = 0,
-    val profilePicture: String? = null
+    val apiKey: String? = null,
+    val apiSecret: String? = null,
+    val accessToken: String? = null,
+    val refreshToken: String? = null,
+    val isEnabled: Boolean = true,
+    val lastSyncTime: Long = 0
 )
 
 @Serializable
@@ -72,8 +89,22 @@ data class PlatformConfig(
 @Serializable
 data class MessageStats(
     val platform: String,
+    val userId: String, // Added for user separation
     val totalSent: Long = 0,
     val totalReceived: Long = 0,
     val totalFailed: Long = 0,
     val lastUpdated: Long = System.currentTimeMillis()
+)
+
+// Remove userId from UiState since it's single-user
+@Serializable
+data class UiState(
+    val deviceId: String = "",
+    val messages: List<Message> = emptyList(),
+    val isLoading: Boolean = false,
+    val typingUsers: Map<String, List<String>> = emptyMap(),
+    val onlineUsers: List<User> = emptyList(),
+    val queueStats: Map<String, Map<String, Long>> = emptyMap(),
+    val error: String? = null,
+    val isUserRegistered: Boolean = false
 )

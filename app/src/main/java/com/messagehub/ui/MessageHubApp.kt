@@ -11,80 +11,100 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.messagehub.data.Message
 import com.messagehub.ui.theme.MessageHubTheme
+import com.messagehub.viewmodels.AuthViewModel
 import com.messagehub.viewmodels.EnhancedMainViewModel
 
+// Update the main app to include authentication flow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MessageHubApp() {
     MessageHubTheme {
-        val navController = rememberNavController()
-        
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = {
-                NavigationBar {
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    val currentDestination = navBackStackEntry?.destination
-                    
-                    val items = listOf(
-                        NavigationItem("messages", "Messages", Icons.Default.Message),
-                        NavigationItem("users", "Users", Icons.Default.People),
-                        NavigationItem("settings", "Settings", Icons.Default.Settings)
-                    )
-                    
-                    items.forEach { item ->
-                        NavigationBarItem(
-                            icon = { Icon(item.icon, contentDescription = null) },
-                            label = { Text(item.label) },
-                            selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
-                            onClick = {
-                                navController.navigate(item.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
+        val authViewModel: AuthViewModel = hiltViewModel()
+        val authState by authViewModel.uiState.collectAsStateWithLifecycle()
+
+        if (authState.isAuthenticated) {
+            // User is authenticated, show main app
+            MainAppContent()
+        } else {
+            // User not authenticated, show auth screen
+            AuthScreen(
+                onAuthSuccess = {
+                    // Navigation handled by state change
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun MainAppContent() {
+    val navController = rememberNavController()
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            NavigationBar {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+
+                val items = listOf(
+                    NavigationItem("messages", "Messages", Icons.Default.Message),
+                    NavigationItem("platforms", "Platforms", Icons.Default.Apps),
+                    NavigationItem("settings", "Settings", Icons.Default.Settings)
+                )
+
+                items.forEach { item ->
+                    NavigationBarItem(
+                        icon = { Icon(item.icon, contentDescription = null) },
+                        label = { Text(item.label) },
+                        selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
+                        onClick = {
+                            navController.navigate(item.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                        )
-                    }
+                        }
+                    )
                 }
             }
-        ) { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = "messages",
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                composable("messages") {
-                    MainScreen(navController)
-                }
-                composable("users") {
-                    UserManagementScreen(
-                        onNavigateBack = { navController.popBackStack() }
-                    )
-                }
-                composable("settings") {
-                    SettingsScreen()
-                }
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = "messages",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("messages") {
+                MainScreen()
+            }
+            composable("platforms") {
+                PlatformConfigScreen()
+            }
+            composable("settings") {
+                SettingsScreen()
             }
         }
     }
 }
 
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen() {
     val viewModel: EnhancedMainViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -114,7 +134,7 @@ fun MainScreen(navController: NavController) {
                 }
             }
         }
-        
+
         // Device ID Setup or Main Dashboard
         if (uiState.deviceId.isEmpty()) {
             DeviceIdSetup(
@@ -140,7 +160,7 @@ fun MainScreen(navController: NavController) {
 @Composable
 fun DeviceIdSetup(onDeviceIdSaved: (String) -> Unit) {
     var deviceId by remember { mutableStateOf("") }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -153,18 +173,18 @@ fun DeviceIdSetup(onDeviceIdSaved: (String) -> Unit) {
                 text = "Setup Device ID",
                 style = MaterialTheme.typography.headlineSmall
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             OutlinedTextField(
                 value = deviceId,
                 onValueChange = { deviceId = it },
                 label = { Text("Device ID / API Token") },
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Button(
                 onClick = { onDeviceIdSaved(deviceId) },
                 enabled = deviceId.isNotBlank()
@@ -183,16 +203,16 @@ fun MainDashboard(
     onTypingChanged: (String, Boolean) -> Unit
 ) {
     var selectedMessage by remember { mutableStateOf<Message?>(null) }
-    
+
     Column {
         // Header with stats
         DashboardHeader(
             uiState = uiState,
             onRefresh = onRefresh
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Messages list
         if (uiState.isLoading) {
             Box(
@@ -213,7 +233,7 @@ fun MainDashboard(
             }
         }
     }
-    
+
     // Reply Dialog
     selectedMessage?.let { message ->
         ReplyDialog(
@@ -251,14 +271,14 @@ fun DashboardHeader(
                     text = "Messages",
                     style = MaterialTheme.typography.headlineSmall
                 )
-                
+
                 Button(onClick = onRefresh) {
                     Text("Refresh")
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Queue stats
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -316,14 +336,14 @@ fun MessageItem(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = message.content,
                 style = MaterialTheme.typography.bodyMedium
             )
-            
+
             // Show typing indicator if users are typing
             if (typingUsers.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(4.dp))
@@ -346,7 +366,7 @@ fun ReplyDialog(
 ) {
     var replyText by remember { mutableStateOf("") }
     var isTyping by remember { mutableStateOf(false) }
-    
+
     LaunchedEffect(replyText) {
         val newIsTyping = replyText.isNotEmpty()
         if (newIsTyping != isTyping) {
@@ -354,7 +374,7 @@ fun ReplyDialog(
             onTypingChanged(isTyping)
         }
     }
-    
+
     AlertDialog(
         onDismissRequest = {
             onTypingChanged(false)
@@ -369,9 +389,9 @@ fun ReplyDialog(
                     text = "Original: ${message.content}",
                     style = MaterialTheme.typography.bodySmall
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 OutlinedTextField(
                     value = replyText,
                     onValueChange = { replyText = it },
@@ -405,6 +425,11 @@ fun ReplyDialog(
 @Composable
 fun SettingsScreen() {
     Text("Settings Screen - Platform configurations, etc.")
+}
+
+@Composable
+fun PlatformConfigScreen() {
+    Text("Platform Configuration Screen")
 }
 
 data class NavigationItem(
