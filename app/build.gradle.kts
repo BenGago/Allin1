@@ -1,11 +1,10 @@
-plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
-    id 'com.google.gms.google-services'
-    id 'org.jetbrains.kotlin.plugin.serialization'
-}
+// Use the 'apply plugin' syntax for clarity
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.dagger.hilt.android'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
 
 android {
     namespace 'com.messagehub'
