@@ -38,11 +38,11 @@ fun EnhancedChatScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    
+
     var selectedMessage by remember { mutableStateOf<EnhancedMessage?>(null) }
     var showEmojiPicker by remember { mutableStateOf(false) }
     var replyToMessage by remember { mutableStateOf<EnhancedMessage?>(null) }
-    
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -52,7 +52,7 @@ fun EnhancedChatScreen(
             isTyping = uiState.isTyping,
             onBackClick = { /* Handle back */ }
         )
-        
+
         // Messages List
         LazyColumn(
             modifier = Modifier
@@ -73,7 +73,7 @@ fun EnhancedChatScreen(
                 )
             }
         }
-        
+
         // Reply Preview
         replyToMessage?.let { message ->
             ReplyPreview(
@@ -81,7 +81,7 @@ fun EnhancedChatScreen(
                 onDismiss = { replyToMessage = null }
             )
         }
-        
+
         // Smart Reply Suggestions
         if (uiState.smartReplies.isNotEmpty()) {
             SmartReplyRow(
@@ -92,7 +92,7 @@ fun EnhancedChatScreen(
                 }
             )
         }
-        
+
         // Message Input
         EnhancedMessageInput(
             onSendMessage = { content, attachments ->
@@ -103,7 +103,7 @@ fun EnhancedChatScreen(
             onEmojiClick = { showEmojiPicker = true }
         )
     }
-    
+
     // Message Actions Bottom Sheet
     selectedMessage?.let { message ->
         MessageActionsBottomSheet(
@@ -123,7 +123,7 @@ fun EnhancedChatScreen(
             }
         )
     }
-    
+
     // Emoji Picker
     if (showEmojiPicker) {
         EmojiPickerDialog(
@@ -151,7 +151,7 @@ fun ChatHeader(
         "sms" -> Color(0xFF34C759)
         else -> MaterialTheme.colorScheme.primary
     }
-    
+
     Surface(
         color = platformColor,
         modifier = Modifier.fillMaxWidth()
@@ -169,15 +169,15 @@ fun ChatHeader(
                     tint = Color.White
                 )
             }
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = platform.capitalize(),
+                    text = platform.replaceFirstChar { it.uppercase() },
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
-                
+
                 AnimatedVisibility(visible = isTyping) {
                     Text(
                         text = "typing...",
@@ -186,7 +186,7 @@ fun ChatHeader(
                     )
                 }
             }
-            
+
             IconButton(onClick = { /* More options */ }) {
                 Icon(
                     Icons.Default.MoreVert,
@@ -209,7 +209,7 @@ fun EnhancedMessageBubble(
     translation: TranslationResult?
 ) {
     val isOutgoing = message.sender == "You" // Determine based on your logic
-    
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -242,9 +242,10 @@ fun EnhancedMessageBubble(
             ) {
                 // Reply indicator
                 message.replyTo?.let {
-                    ReplyIndicator(replyToId = it)
+                    // Assuming you have a ReplyIndicator composable
+                    // ReplyIndicator(replyToId = it)
                 }
-                
+
                 // Message content based on type
                 when (message.messageType) {
                     MessageType.TEXT -> {
@@ -272,127 +273,9 @@ fun EnhancedMessageBubble(
                         }
                     }
                     MessageType.AUDIO -> {
-                        AudioMessageBubble(message.attachments.first())
+                        // Assuming you have an AudioMessageBubble composable
+                        // AudioMessageBubble(message.attachments.first())
                     }
                     MessageType.DOCUMENT -> {
-                        DocumentMessageBubble(message.attachments.first())
-                    }
-                    else -> {
-                        Text(
-                            text = message.content,
-                            color = if (isOutgoing) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-                
-                // Translation
-                translation?.translatedText?.let { translatedText ->
-                    Spacer(modifier = Modifier.height(8.dp)
-                    Divider(color = Color.Gray.copy(alpha = 0.3f))
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = translatedText,
-                        fontSize = 12.sp,
-                        color = if (isOutgoing) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
-                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                    )
-                }
-                
-                // Timestamp and status
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = formatTime(message.timestamp),
-                        fontSize = 10.sp,
-                        color = if (isOutgoing) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                    )
-                    
-                    if (message.isEdited) {
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "edited",
-                            fontSize = 8.sp,
-                            color = if (isOutgoing) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                        )
-                    }
-                }
-            }
-        }
-        
-        // Reactions
-        if (message.reactions.isNotEmpty()) {
-            ReactionRow(
-                reactions = message.reactions,
-                onReactionClick = onReactionClick
-            )
-        }
-    }
-}
-
-@Composable
-fun SmartReplyRow(
-    suggestions: List<String>,
-    onSuggestionClick: (String) -> Unit
-) {
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(suggestions) { suggestion ->
-            SuggestionChip(
-                onClick = { onSuggestionClick(suggestion) },
-                label = { Text(suggestion) }
-            )
-        }
-    }
-}
-
-@Composable
-fun ReactionRow(
-    reactions: List<Reaction>,
-    onReactionClick: (String) -> Unit
-) {
-    LazyRow(
-        modifier = Modifier.padding(top = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        items(reactions.groupBy { it.emoji }.entries.toList()) { (emoji, reactionList) ->
-            Surface(
-                onClick = { onReactionClick(emoji) },
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.surfaceVariant
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = emoji, fontSize = 12.sp)
-                    if (reactionList.size > 1) {
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = reactionList.size.toString(),
-                            fontSize = 10.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-// Helper function to format timestamp
-private fun formatTime(timestamp: String): String {
-    return try {
-        val time = timestamp.toLong()
-        val date = java.util.Date(time)
-        java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(date)
-    } catch (e: Exception) {
-        timestamp
-    }
-}
+                        // Assuming you have a DocumentMessageBubble composable
+                        //
