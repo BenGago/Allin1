@@ -2,7 +2,6 @@ package com.messagehub.ui
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,18 +17,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.messagehub.data.Attachment
 import com.messagehub.data.EnhancedMessage
 import com.messagehub.data.MessageType
 import com.messagehub.data.Reaction
-import com.messagehub.features.SmartReplyManager
 import com.messagehub.features.TranslationResult
 import com.messagehub.viewmodels.EnhancedChatViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -37,7 +39,6 @@ fun EnhancedChatScreen(
     viewModel: EnhancedChatViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
 
     var selectedMessage by remember { mutableStateOf<EnhancedMessage?>(null) }
     var showEmojiPicker by remember { mutableStateOf(false) }
@@ -46,14 +47,12 @@ fun EnhancedChatScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Chat Header with platform indicator
         ChatHeader(
             platform = uiState.currentPlatform,
             isTyping = uiState.isTyping,
             onBackClick = { /* Handle back */ }
         )
 
-        // Messages List
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -74,7 +73,6 @@ fun EnhancedChatScreen(
             }
         }
 
-        // Reply Preview
         replyToMessage?.let { message ->
             ReplyPreview(
                 message = message,
@@ -82,7 +80,6 @@ fun EnhancedChatScreen(
             )
         }
 
-        // Smart Reply Suggestions
         if (uiState.smartReplies.isNotEmpty()) {
             SmartReplyRow(
                 suggestions = uiState.smartReplies,
@@ -93,7 +90,6 @@ fun EnhancedChatScreen(
             )
         }
 
-        // Message Input
         EnhancedMessageInput(
             onSendMessage = { content, attachments ->
                 viewModel.sendMessage(content, attachments, replyToMessage?.id)
@@ -104,7 +100,6 @@ fun EnhancedChatScreen(
         )
     }
 
-    // Message Actions Bottom Sheet
     selectedMessage?.let { message ->
         MessageActionsBottomSheet(
             message = message,
@@ -124,7 +119,6 @@ fun EnhancedChatScreen(
         )
     }
 
-    // Emoji Picker
     if (showEmojiPicker) {
         EmojiPickerDialog(
             onEmojiSelected = { emoji ->
@@ -172,7 +166,7 @@ fun ChatHeader(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = platform.replaceFirstChar { it.uppercase() },
+                    text = platform.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
@@ -208,7 +202,7 @@ fun EnhancedMessageBubble(
     onTranslateClick: () -> Unit,
     translation: TranslationResult?
 ) {
-    val isOutgoing = message.sender == "You" // Determine based on your logic
+    val isOutgoing = message.sender == "You"
 
     Column(
         modifier = Modifier
@@ -220,15 +214,11 @@ fun EnhancedMessageBubble(
             modifier = Modifier
                 .widthIn(max = 280.dp)
                 .combinedClickable(
-                    onClick = { },
+                    onClick = { /* Handle regular click if needed */ },
                     onLongClick = onLongClick
                 ),
             colors = CardDefaults.cardColors(
-                containerColor = if (isOutgoing) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.surfaceVariant
-                }
+                containerColor = if (isOutgoing) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
             ),
             shape = RoundedCornerShape(
                 topStart = 16.dp,
@@ -237,28 +227,13 @@ fun EnhancedMessageBubble(
                 bottomEnd = if (isOutgoing) 4.dp else 16.dp
             )
         ) {
-            Column(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                // Reply indicator
-                message.replyTo?.let {
-                    // Assuming you have a ReplyIndicator composable
-                    // ReplyIndicator(replyToId = it)
-                }
-
-                // Message content based on type
+            Column(modifier = Modifier.padding(12.dp)) {
                 when (message.messageType) {
-                    MessageType.TEXT -> {
-                        Text(
-                            text = message.content,
-                            color = if (isOutgoing) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
                     MessageType.IMAGE -> {
                         message.attachments.firstOrNull()?.let { attachment ->
                             AsyncImage(
                                 model = attachment.url,
-                                contentDescription = "Image",
+                                contentDescription = "Image attachment",
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clip(RoundedCornerShape(8.dp))
@@ -272,10 +247,142 @@ fun EnhancedMessageBubble(
                             }
                         }
                     }
-                    MessageType.AUDIO -> {
-                        // Assuming you have an AudioMessageBubble composable
-                        // AudioMessageBubble(message.attachments.first())
+                    // Add other message types here
+                    else -> {
+                        Text(
+                            text = message.content,
+                            color = if (isOutgoing) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
-                    MessageType.DOCUMENT -> {
-                        // Assuming you have a DocumentMessageBubble composable
-                        //
+                }
+
+                translation?.translatedText?.let { translatedText ->
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Divider(color = Color.Gray.copy(alpha = 0.3f))
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = translatedText,
+                        fontSize = 12.sp,
+                        color = if (isOutgoing) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = formatTime(message.timestamp),
+                        fontSize = 10.sp,
+                        color = if (isOutgoing) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    )
+
+                    if (message.isEdited) {
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "edited",
+                            fontSize = 8.sp,
+                            color = if (isOutgoing) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        )
+                    }
+                }
+            }
+        }
+
+        if (message.reactions.isNotEmpty()) {
+            ReactionRow(
+                reactions = message.reactions,
+                onReactionClick = onReactionClick
+            )
+        }
+    }
+}
+
+@Composable
+fun SmartReplyRow(suggestions: List<String>, onSuggestionClick: (String) -> Unit) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(suggestions) { suggestion ->
+            SuggestionChip(
+                onClick = { onSuggestionClick(suggestion) },
+                label = { Text(suggestion) }
+            )
+        }
+    }
+}
+
+@Composable
+fun ReactionRow(reactions: List<Reaction>, onReactionClick: (String) -> Unit) {
+    LazyRow(
+        modifier = Modifier.padding(top = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        items(reactions.groupBy { it.emoji }.entries.toList()) { (emoji, reactionList) ->
+            Surface(
+                onClick = { onReactionClick(emoji) },
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.surfaceVariant
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = emoji, fontSize = 12.sp)
+                    if (reactionList.size > 1) {
+                        Spacer(modifier = Modifier.width(2.dp))
+                        Text(
+                            text = reactionList.size.toString(),
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun formatTime(timestamp: String): String {
+    return try {
+        val time = timestamp.toLong()
+        val date = Date(time)
+        SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
+    } catch (e: Exception) {
+        timestamp
+    }
+}
+
+// Dummy placeholders for missing composables
+@Composable
+fun ReplyPreview(message: EnhancedMessage, onDismiss: () -> Unit) {
+    Box(modifier = Modifier.fillMaxWidth().padding(8.dp).background(Color.LightGray)) {
+        Text("Replying to: ${message.content.take(20)}...")
+    }
+}
+
+@Composable
+fun EnhancedMessageInput(onSendMessage: (String, List<Any>) -> Unit, onTyping: (Boolean) -> Unit, onEmojiClick: () -> Unit) {
+     Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+        Text("Message Input Area...")
+    }
+}
+
+@Composable
+fun MessageActionsBottomSheet(message: EnhancedMessage, onDismiss: () -> Unit, onEdit: (String) -> Unit, onDelete: () -> Unit, onForward: (String) -> Unit) {
+     Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+        Text("Message Actions...")
+    }
+}
+
+@Composable
+fun EmojiPickerDialog(onEmojiSelected: (String) -> Unit, onDismiss: () -> Unit) {
+     Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+        Text("Emoji Picker...")
+    }
+}
