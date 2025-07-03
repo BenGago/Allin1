@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">163864030927</string>
+    <string name="google_api_key" translatable="false">AIzaSyAWwiYL28FzX5s3a-XjF90-S-2KOup8XbY</string>
+    <string name="google_app_id" translatable="false">1:163864030927:android:04f4ddcb3898ddcd9cd1ba</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAWwiYL28FzX5s3a-XjF90-S-2KOup8XbY</string>
+    <string name="google_storage_bucket" translatable="false">messaging-hub-c5dd1.firebasestorage.app</string>
+    <string name="project_id" translatable="false">messaging-hub-c5dd1</string>
+</resources>

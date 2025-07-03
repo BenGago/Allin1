@@ -1,0 +1,94 @@
+Initialized native services in: /data/data/com.termux/files/home/.gradle/native
+Initialized jansi services in: /data/data/com.termux/files/home/.gradle/native
+Received JVM installation metadata from '/data/data/com.termux/files/usr/lib/jvm/java-21-openjdk': {JAVA_HOME=/data/data/com.termux/files/usr/lib/jvm/java-21-openjdk, JAVA_VERSION=21.0.7, JAVA_VENDOR=Termux, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=21.0.7, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=21.0.7, VM_VENDOR=Termux, OS_ARCH=aarch64}
+The client will now receive all logging from the daemon (pid: 29780). The daemon log file: /data/data/com.termux/files/home/.gradle/daemon/8.2/daemon-29780.out.log
+Starting 9th build in daemon [uptime: 25 mins 33.972 secs, performance: 99%, GC rate: 0.00/s, heap usage: 2% of 512 MiB, non-heap usage: 47% of 384 MiB]
+Using 8 worker leases.
+Watching the file system is configured to be enabled if available
+File system watching is inactive
+Starting Build
+Settings evaluated using settings file '/data/data/com.termux/files/home/Allin1/settings.gradle'.
+Projects loaded. Root project using build file '/data/data/com.termux/files/home/Allin1/build.gradle'.
+Included projects: [root project 'Allin1', project ':app']
+
+> Configure project :
+Evaluating root project 'Allin1' using build file '/data/data/com.termux/files/home/Allin1/build.gradle'.
+The configuration :classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+
+> Configure project :app
+Evaluating project ':app' using build file '/data/data/com.termux/files/home/Allin1/app/build.gradle.kts'.
+The configuration detachedConfiguration1 is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration detachedConfiguration1 is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration detachedConfiguration1 is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration detachedConfiguration1 is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration detachedConfiguration2 is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration detachedConfiguration2 is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration detachedConfiguration2 is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration detachedConfiguration2 is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration detachedConfiguration3 is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration detachedConfiguration3 is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration detachedConfiguration3 is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration detachedConfiguration3 is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration detachedConfiguration4 is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration detachedConfiguration4 is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration detachedConfiguration4 is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration detachedConfiguration4 is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :app:classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :app:classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :app:classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :app:classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+Using default execution profile
+Using Kotlin Gradle Plugin gradle76 variant
+Caching disabled for Kotlin DSL accessors for project ':app' because:
+  Build cache is disabled
+Skipping Kotlin DSL accessors for project ':app' as it is up-to-date.
+All projects evaluated.
+The configuration :classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :app:classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :app:classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :app:classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :app:classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :app:classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :app:classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :app:classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :app:classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+The configuration :app:classpath is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :app:classpath is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+Task name matched 'assembleDebug'
+Selected primary task 'assembleDebug' from project :
+The configuration :app:detachedConfiguration4 is both resolvable and consumable. This is considered a legacy configuration and it will eventually only be possible to be one of these.
+The configuration :app:detachedConfiguration4 is both consumable and declarable. This combination is incorrect, only one of these flags should be set.
+Tasks to be executed: [task ':app:preBuild', task ':app:preDebugBuild', task ':app:mergeDebugNativeDebugMetadata', task ':app:checkDebugAarMetadata', task ':app:generateDebugResValues', task ':app:processDebugGoogleServices', task ':app:mapDebugSourceSetPaths', task ':app:generateDebugResources', task ':app:mergeDebugResources', task ':app:packageDebugResources', task ':app:parseDebugLocalResources', task ':app:createDebugCompatibleScreenManifests', task ':app:extractDeepLinksDebug', task ':app:processDebugMainManifest', task ':app:processDebugManifest', task ':app:processDebugManifestForPackage', task ':app:processDebugResources', task ':app:kaptGenerateStubsDebugKotlin', task ':app:kaptDebugKotlin', task ':app:compileDebugKotlin', task ':app:javaPreCompileDebug', task ':app:compileDebugJavaWithJavac', task ':app:mergeDebugShaders', task ':app:compileDebugShaders', task ':app:generateDebugAssets', task ':app:mergeDebugAssets', task ':app:compressDebugAssets', task ':app:hiltAggregateDepsDebug', task ':app:hiltJavaCompileDebug', task ':app:processDebugJavaRes', task ':app:mergeDebugJavaResource', task ':app:checkDebugDuplicateClasses', task ':app:desugarDebugFileDependencies', task ':app:mergeExtDexDebug', task ':app:mergeLibDexDebug', task ':app:transformDebugClassesWithAsm', task ':app:dexBuilderDebug', task ':app:mergeProjectDexDebug', task ':app:mergeDebugJniLibFolders', task ':app:mergeDebugNativeLibs', task ':app:stripDebugDebugSymbols', task ':app:validateSigningDebug', task ':app:writeDebugAppMetadata', task ':app:writeDebugSigningConfigVersions', task ':app:packageDebug', task ':app:createDebugApkListingFileRedirect', task ':app:assembleDebug']
+Tasks that were excluded: []
+Resolve mutations for :app:preBuild (Thread[#448,Execution worker,5,main]) started.
+:app:preBuild (Thread[#449,Execution worker Thread 2,5,main]) started.
+
+> Task :app:preBuild UP-TO-DATE
+Skipping task ':app:preBuild' as it has no actions.
+Resolve mutations for :app:preDebugBuild (Thread[#449,Execution worker Thread 2,5,main]) started.
+:app:preDebugBuild (Thread[#449,Execution worker Thread 2,5,main]) started.
+
+> Task :app:preDebugBuild UP-TO-DATE
+Skipping task ':app:preDebugBuild' as it has no actions.
+Resolve mutations for :app:mergeDebugNativeDebugMetadata (Thread[#449,Execution worker Thread 2,5,main]) started.
+:app:mergeDebugNativeDebugMetadata (Thread[#449,Execution worker Thread 2,5,main]) started.
+
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+Skipping task ':app:mergeDebugNativeDebugMetadata' as it has no source files and no previous output files.
+Resolve mutations for :app:checkDebugAarMetadata (Thread[#449,Execution worker Thread 2,5,main]) started.
+:app:checkDebugAarMetadata (Thread[#449,Execution worker Thread 2,5,main]) started.
+
+> Task :app:checkDebugAarMetadata FAILED
+1 actionable task: 1 executed

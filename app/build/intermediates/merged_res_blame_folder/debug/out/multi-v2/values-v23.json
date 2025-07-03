@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.messagehub.app-mergeDebugResources-67:/values-v23/values-v23.xml",
+            "map": [
+                {
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/transforms-3/a1ed92b4dff38c4d7372f8bd986151c3/transformed/work-runtime-2.9.0/res/values-v23/values-v23.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,121",
+                        "endColumns": "65,62",
+                        "endOffsets": "116,179"
+                    }
+                }
+            ]
+        }
+    ]
+}
