@@ -1,11 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.MessageHub" parent="Theme.Material3.DayNight">
-        <!-- Optional: Define these if your app or Compose code uses them -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+
+        <!-- Add these colors only if you really need them -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/purple_200</item>
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
     </style>
 
 </resources>
