@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permissions -->
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -13,7 +12,6 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <!-- Speech Recognition Intent -->
     <queries>
         <intent>
             <action android:name="android.speech.RecognitionService" />
@@ -29,22 +27,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MessageHub"
+        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         tools:targetApi="31">
 
-        <!-- Main entry -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MessageHub">
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- SMS receiver -->
         <receiver
             android:name=".receivers.SmsReceiver"
             android:exported="true"
@@ -54,19 +50,16 @@
             </intent-filter>
         </receiver>
 
-        <!-- Message sync service -->
         <service
             android:name=".services.MessageSyncService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
-        <!-- Platform integration service -->
         <service
             android:name=".services.PlatformIntegrationService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
-        <!-- Firebase push service -->
         <service
             android:name=".services.MyFirebaseMessagingService"
             android:exported="false">
@@ -75,7 +68,6 @@
             </intent-filter>
         </service>
 
-        <!-- Firebase notification config (optional) -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification" />
